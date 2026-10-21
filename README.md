@@ -1,1 +1,1 @@
-# Pr-cticas_Entornos_Gr-ficos
+# Practicas_Entornos_Graficos
