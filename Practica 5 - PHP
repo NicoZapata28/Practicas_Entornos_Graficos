@@ -1,0 +1,211 @@
+Práctica 5 - PHP
+Ejercicio 1
+<?php
+$destinatario = "xx@xx.com";
+$asunto = "Prueba de correo HTML";
+$cuerpo = "
+<html>
+<head>
+<meta charset='UTF-8'>
+<title>Prueba</title>
+</head>
+<body>
+<h1 style='color:#1a4f8b;'>Hola!</h1>
+<p>Esta es una prueba de envío de correo <b>con formato HTML</b> a través del servidor.</p>
+<p><a href='https://www.ejemplo.com'>Visitar el sitio</a></p>
+</body>
+</html>
+";
+
+$cabeceras  = "MIME-Version: 1.0\r\n";
+$cabeceras .= "Content-type: text/html; charset=UTF-8\r\n";
+$cabeceras .= "From: Webmaster <webmaster@xx.com>\r\n";
+
+if (mail($destinatario, $asunto, $cuerpo, $cabeceras)) {
+    echo "Correo enviado correctamente.";
+} else {
+    echo "Error al enviar el correo.";
+}
+?>
+
+Ejercicio 2
+<?php
+$mensaje_estado = "";
+$nombre = "";
+$email = "";
+$consulta = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $nombre   = trim($_POST["nombre"] ?? "");
+    $email    = trim($_POST["email"] ?? "");
+    $consulta = trim($_POST["consulta"] ?? "");
+
+    if ($nombre === "" || $email === "" || $consulta === "") {
+        $mensaje_estado = "Todos los campos son obligatorios.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $mensaje_estado = "El correo electrónico no es válido.";
+    } else {
+        $destinatario = "webmaster@xx.com";
+        $asunto = "Nueva consulta desde el sitio";
+        $cuerpo = "Nombre: $nombre\nEmail: $email\n\nConsulta:\n$consulta";
+
+        $cabeceras  = "Content-type: text/plain; charset=UTF-8\r\n";
+        $cabeceras .= "From: Sitio Web <webmaster@xx.com>\r\n";
+        $cabeceras .= "Reply-To: $email\r\n";
+
+        if (mail($destinatario, $asunto, $cuerpo, $cabeceras)) {
+            $mensaje_estado = "Gracias, tu consulta fue enviada.";
+            $nombre = "";
+            $email = "";
+            $consulta = "";
+        } else {
+            $mensaje_estado = "No se pudo enviar la consulta. Intenta más tarde.";
+        }
+    }
+}
+?>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Contacto</title>
+</head>
+<body>
+<h1>Contacto</h1>
+
+<?php if ($mensaje_estado !== "") { echo "<p>" . htmlspecialchars($mensaje_estado) . "</p>"; } ?>
+
+<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+    <p>Nombre:<br>
+        <input type="text" name="nombre" value="<?php echo htmlspecialchars($nombre); ?>">
+    </p>
+    <p>Email:<br>
+        <input type="text" name="email" value="<?php echo htmlspecialchars($email); ?>">
+    </p>
+    <p>Consulta:<br>
+        <textarea name="consulta" rows="6" cols="50"><?php echo htmlspecialchars($consulta); ?></textarea>
+    </p>
+    <p><input type="submit" value="Enviar consulta"></p>
+</form>
+</body>
+</html>
+
+Ejercicio 3
+<?php
+$mensaje_estado = "";
+$nombre_propio = "";
+$nombre_amigo = "";
+$email_amigo = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $nombre_propio = trim($_POST["nombre_propio"] ?? "");
+    $nombre_amigo  = trim($_POST["nombre_amigo"] ?? "");
+    $email_amigo   = trim($_POST["email_amigo"] ?? "");
+
+    if ($nombre_propio === "" || $nombre_amigo === "" || $email_amigo === "") {
+        $mensaje_estado = "Completa todos los campos.";
+    } elseif (!filter_var($email_amigo, FILTER_VALIDATE_EMAIL)) {
+        $mensaje_estado = "El correo de tu amigo no es válido.";
+    } else {
+        $url_sitio = "https://www.xx.com";
+        $asunto = "$nombre_propio te recomienda este sitio";
+        $cuerpo = "Hola $nombre_amigo,\n\n"
+                . "$nombre_propio pensó que te podría interesar este sitio:\n"
+                . "$url_sitio\n\n"
+                . "¡Saludos!";
+
+        $cabeceras  = "Content-type: text/plain; charset=UTF-8\r\n";
+        $cabeceras .= "From: Sitio Web <webmaster@xx.com>\r\n";
+
+        if (mail($email_amigo, $asunto, $cuerpo, $cabeceras)) {
+            $mensaje_estado = "¡Recomendación enviada a " . htmlspecialchars($nombre_amigo) . "!";
+            $nombre_amigo = "";
+            $email_amigo = "";
+        } else {
+            $mensaje_estado = "No se pudo enviar la recomendación. Intenta más tarde.";
+        }
+    }
+}
+?>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Recomendar el sitio</title>
+</head>
+<body>
+<h1>Recomienda este sitio a un amigo</h1>
+
+<?php if ($mensaje_estado !== "") { echo "<p>" . htmlspecialchars($mensaje_estado) . "</p>"; } ?>
+
+<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+    <p>Tu nombre:<br>
+        <input type="text" name="nombre_propio" value="<?php echo htmlspecialchars($nombre_propio); ?>">
+    </p>
+    <p>Nombre de tu amigo:<br>
+        <input type="text" name="nombre_amigo" value="<?php echo htmlspecialchars($nombre_amigo); ?>">
+    </p>
+    <p>Email de tu amigo:<br>
+        <input type="text" name="email_amigo" value="<?php echo htmlspecialchars($email_amigo); ?>">
+    </p>
+    <p><input type="submit" value="Enviar recomendación"></p>
+</form>
+</body>
+</html>
+
+Ejercicio 4: Contador de páginas visitadas en la sesión
+contador_sesion.php (archivo incluido en todas las páginas)
+<?php
+if (!isset($_SESSION['paginas_visitadas'])) {
+    $_SESSION['paginas_visitadas'] = 0;
+}
+$_SESSION['paginas_visitadas']++;
+
+echo "<p>Páginas visitadas en esta sesión: " . $_SESSION['paginas_visitadas'] . "</p>";
+?>
+pagina1.php
+<?php session_start(); ?>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Página 1</title>
+</head>
+<body>
+<h1>Página 1</h1>
+<?php include("contador_sesion.php"); ?>
+<p><a href="pagina2.php">Ir a la página 2</a></p>
+<p><a href="pagina3.php">Ir a la página 3</a></p>
+</body>
+</html>
+pagina2.php
+<?php session_start(); ?>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Página 2</title>
+</head>
+<body>
+<h1>Página 2</h1>
+<?php include("contador_sesion.php"); ?>
+<p><a href="pagina1.php">Ir a la página 1</a></p>
+<p><a href="pagina3.php">Ir a la página 3</a></p>
+</body>
+</html>
+pagina3.php
+<?php session_start(); ?>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Página 3</title>
+</head>
+<body>
+<h1>Página 3</h1>
+<?php include("contador_sesion.php"); ?>
+<p><a href="pagina1.php">Ir a la página 1</a></p>
+<p><a href="pagina2.php">Ir a la página 2</a></p>
+</body>
+</html>
+
