@@ -1,0 +1,158 @@
+Práctica 4 - PHP
+PHP: variables, tipos, operadores, expresiones, estructuras de control
+Ejercicio 1
+Variable	Valor inicial	Tipo
+$a	TRUE	booleano
+$b	"xyz"	string (comillas dobles)
+$c	'xyz'	string (comillas simples)
+$d	12	entero
+$f	doble($d++)	entero
+$g	$f += 10	entero
+Operadores:
+•	Asignación: =, +=
+•	Incremento: ++ (prefijo en ++$d, postfijo en $d++)
+•	Multiplicación: * (en $i*2 y en $d*3)
+•	Ternario: ? :
+Funciones y parámetros:
+•	doble($i): definida por el usuario, recibe un parámetro $i y devuelve $i*2.
+•	gettype($x): función interna, recibe una variable y devuelve su tipo como string.
+•	is_int($d): función interna, recibe un valor y devuelve true si es entero.
+•	is_string($a): función interna, recibe un valor y devuelve true si es string.
+•	echo es una construcción del lenguaje, no una función.
+Estructuras de control:
+•	if (is_int($d)) { ... }
+•	if (is_string($a)) { ... }
+•	El operador ternario $a ? ++$d : $d*3 funciona como una decisión, pero es un operador, no una estructura de control.
+Salida por pantalla, paso a paso:
+1.	gettype imprime boolean, string, string, integer, todo pegado: booleanstringstringinteger.
+2.	$d = 12, is_int es verdadero, entonces $d += 4 → $d = 16.
+3.	is_string($a) es falso porque $a es booleano, así que no imprime Cadena: ....
+4.	$a es TRUE, entonces ++$d → $d = 17 y se asigna $d = 17.
+5.	doble($d++): se pasa 17 a la función (devuelve 34) y después $d pasa a 18. Entonces $f = 34.
+6.	$g = $f += 10: $f pasa a 44 y $g recibe 44.
+7.	echo $a, $b, $c, $d, $f, $g imprime 1 (TRUE se muestra como 1), xyz, xyz, 18, 44, 44.
+Salida final:
+booleanstringstringinteger1xyzxyz184444
+Ejercicio 2
+a) Sí, son equivalentes. Los tres imprimen 12345678910:
+•	Primer código: while con llaves, imprime $i++ (postincremento), así que muestra 1 a 10.
+•	Segundo código: while con sintaxis alternativa (: y endwhile), imprime $i y luego incrementa. Igual resultado.
+•	Tercer código: do-while con ++$i. Empieza en 0, incrementa antes de imprimir, y el ciclo corre hasta que $i llega a 10. Igual resultado.
+b) Sí, son equivalentes. Los cuatro imprimen 12345678910:
+•	for ($i = 1; $i <= 10; $i++): forma estándar.
+•	for ($i = 1; $i <= 10; print $i, $i++);: el cuerpo está vacío. Cada iteración, la tercera expresión imprime $i y luego lo incrementa. Como el cuerpo es vacío, la impresión ocurre en el paso de incremento.
+•	for ($i = 1; ; $i++) con if ($i > 10) break; antes del print: la condición está vacía (siempre verdadera) y se corta manualmente.
+•	for (;;) con $i = 1 antes, break cuando $i > 10 e incremento dentro del cuerpo: igual que los anteriores.
+c) Sí, son equivalentes. Ambos comparan $i con 0, 1 y 2 y muestran el mensaje correspondiente. El break en cada case cumple el mismo papel que el elseif. Como ninguno tiene default, si $i no es 0, 1 o 2, no se imprime nada en los dos casos.
+Ejercicio 3
+a) El código genera dinámicamente una tabla HTML de 5 filas por 2 columnas, con borde y ancho del 90%. Cada celda contiene &nbsp; (espacio en blanco), así que la tabla queda vacía. Sirve como plantilla para mostrar una grilla o un formulario de tabla sin escribir cada <td> a mano.
+b) Es una página con un formulario que pide la edad:
+1.	La primera vez que se carga, $_POST['submit'] no existe, así que !isset(...) es verdadero y se muestra el formulario con el campo "Edad" y el botón "Ir".
+2.	Al enviar el formulario, el action apunta a la misma página ($_SERVER['PHP_SELF']), que vuelve a cargarse. Esta vez isset($_POST['submit']) es verdadero, así que se entra al else.
+3.	Se toma el valor de $_POST['age'] y se compara: si es mayor o igual a 21 imprime Mayor de edad; si no, imprime Menor de edad.
+Ejercicio 4
+Con datos.php conteniendo $color = 'blanco'; $flor = 'clavel';:
+<?php
+echo "El $flor $color \n";   // (1)
+include 'datos.php';         // (2)
+echo " El $flor $color";     // (3)
+?>
+•	(1) En este momento $flor y $color todavía no existen. PHP muestra un aviso de variable no definida y las reemplaza por cadenas vacías. Se imprime El + espacio + espacio + \n, es decir: El seguido de salto de línea.
+•	(2) include ejecuta datos.php en el mismo ámbito, así que crea $color = 'blanco' y $flor = 'clavel'.
+•	(3) Ahora las variables tienen valor, así que se imprime El clavel blanco.
+Salida:
+El  
+ El clavel blanco
+Ejercicio 5: Contador de visitas
+contador.php, paso a paso:
+1.	$archivo = "contador.dat": nombre del archivo donde se guarda el número.
+2.	fopen($archivo, "r"): abre el archivo solo para lectura.
+3.	fread($abrir, filesize($archivo)): lee todo el contenido, que es el número actual.
+4.	fclose: cierra el archivo.
+5.	fopen($archivo, "w"): abre de nuevo para escritura. Importante: "w" borra el contenido del archivo.
+6.	$cont = $cont + 1: suma una visita. PHP convierte el string leído a número automáticamente.
+7.	fwrite: guarda el nuevo valor. fclose: cierra el archivo.
+8.	echo: muestra el total con un <font> de Arial, tamaño 3.
+visitas.php es la página que muestra el contador: usa include("contador.php"), así que cada vez que alguien carga visitas.php se incrementa el contador.
+Crear contador.dat (en la misma carpeta):
+1.	Abrir un editor de texto (Bloc de notas, Notepad++, etc.).
+2.	Escribir 0 (valor inicial) y guardar con el nombre contador.dat, en la misma carpeta que visitas.php.
+3.	Dar permisos de lectura y escritura: 
+o	En Linux o Mac: chmod 666 contador.dat en la terminal.
+o	En Windows: clic derecho → Propiedades → desmarcar "Solo lectura".
+Observaciones técnicas:
+•	<? es una etiqueta corta. Depende de la configuración short_open_tag y en muchos servidores está desactivada. Lo correcto es usar <?php.
+•	Si dos personas cargan la página al mismo tiempo, pueden perderse visitas (condición de carrera). Una solución es usar flock() para bloquear el archivo mientras se lee y se escribe.
+•	Si contador.dat está vacío o no existe, el cálculo puede dar resultados inesperados o mostrar avisos.
+ 
+PHP: arrays, funciones
+Ejercicio 1
+Sí, son equivalentes. En ambos casos el resultado es:
+color => rojo, sabor => dulce, forma => redonda, nombre => manzana, 0 => 4
+•	En el primero, el 4 sin clave recibe la clave entera siguiente, que es 0.
+•	En el segundo, $a[] = 4 también asigna la siguiente clave entera disponible, que es 0.
+Ejercicio 2
+a) Salida: bar1
+•	$matriz["x"] es "bar".
+•	$matriz[12] es true, y echo lo muestra como 1.
+b) Salida: 5942
+•	$matriz["unamatriz"][6] es 5.
+•	$matriz["unamatriz"][13] es 9.
+•	$matriz["unamatriz"]["a"] es 42.
+c) Salida: ninguna (no hay echo).
+•	El array inicial es [5 => 1, 12 => 2].
+•	$matriz[] = 56 usa la clave 13 (la mayor clave entera + 1).
+•	$matriz["x"] = 42 agrega una clave de texto.
+•	unset($matriz[5]) borra la clave 5.
+•	unset($matriz) destruye toda la variable.
+Ejercicio 3
+a) getdate() devuelve un array asociativo con la fecha y hora actuales. Si se ejecuta hoy, la salida sería algo como:
+Has entrado en esta pagina a las 14 horas, con 32 minutos y 10 segundos, del 16/10/2026
+(Los valores dependen del momento de ejecución. mon no tiene cero a la izquierda, así que en marzo aparecería 3 y no 03.)
+b) Salida:
+5+6=11
+
+
+
+Ejercicio 4
+La función comprobar_nombre_usuario valida un nombre de usuario en dos pasos:
+1.	Longitud: debe tener entre 3 y 20 caracteres.
+2.	Caracteres permitidos: cada carácter debe estar en el string $permitidos (letras mayúsculas y minúsculas, dígitos, guion - y guion bajo _). Usa substr para tomar cada carácter y strpos para verificar si está en la lista.
+Devuelve true si el nombre es válido y false si no, mostrando un mensaje en cada caso.
+Script de prueba (guardar como prueba_usuario.php):
+<?php
+function comprobar_nombre_usuario($nombre_usuario){
+  if (strlen($nombre_usuario)<3 || strlen($nombre_usuario)>20){
+    echo $nombre_usuario . " no es válido<br>";
+    return false;
+  }
+  $permitidos = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_";
+  for ($i=0; $i<strlen($nombre_usuario); $i++){
+    if (strpos($permitidos, substr($nombre_usuario,$i,1))===false){
+      echo $nombre_usuario . " no es válido<br>";
+      return false;
+    }
+  }
+  echo $nombre_usuario . " es válido<br>";
+  return true;
+}
+
+$pruebas = ["ab", "juan_perez", "Nico-99", "usuario con espacio", "a@b.com", "x123456789012345678901234"];
+
+foreach ($pruebas as $nombre) {
+  comprobar_nombre_usuario($nombre);
+}
+?>
+Salida esperada:
+ab no es válido
+juan_perez es válido
+Nico-99 es válido
+usuario con espacio no es válido
+a@b.com no es válido
+x123456789012345678901234 no es válido
+•	"ab" tiene 2 caracteres, menos del mínimo.
+•	"juan_perez" y "Nico-99" cumplen longitud y caracteres.
+•	"usuario con espacio" tiene espacios, que no están permitidos.
+•	"a@b.com" tiene @ y ., que no están permitidos.
+•	"x123456789012345678901234" tiene 25 caracteres, más del máximo.
+
