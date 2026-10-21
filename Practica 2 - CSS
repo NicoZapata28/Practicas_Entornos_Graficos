@@ -1,0 +1,161 @@
+Ejercicio 1: Responder
+1. ¿Qué es CSS y para qué se usa? CSS (Cascading Style Sheets, hojas de estilo en cascada) es el lenguaje que define la presentación de un documento: colores, tipografías, tamaños, espaciados, bordes y disposición. Se usa para separar el contenido (HTML) del aspecto visual (CSS), lo que permite cambiar el diseño de todo un sitio sin tocar el HTML.
+2. ¿Cómo funcionan las reglas? Una regla tiene dos partes: un selector, que indica a qué elementos se aplica, y un bloque de declaraciones entre llaves. Cada declaración es un par propiedad: valor;. Por ejemplo:
+p.destacado {
+  color: red;
+  font-size: 14px;
+}
+El navegador busca los elementos que coinciden con cada selector y les aplica las declaraciones.
+3. ¿Cuáles son las tres formas de dar estilo a un documento?
+•	En línea: con el atributo style en el elemento. Ejemplo: <p style="color: red;">.
+•	Interna: con un elemento <style> dentro de <head>.
+•	Externa: con un archivo .css enlazado desde <head> con <link rel="stylesheet" href="estilo.css">. Es la forma recomendada porque se reutiliza en todas las páginas.
+4. Tipos de selectores más utilizados
+•	Universal: * selecciona todos los elementos. Ejemplo: * { color: green; }
+•	De elemento (tipo): p selecciona todos los párrafos. Ejemplo: p { font-family: arial; }
+•	De clase: .clase selecciona los elementos con ese atributo class. Ejemplo: .importante { font-size: 20px; }
+•	De identificador: #id selecciona el elemento con ese id (debe ser único). Ejemplo: #menu { background-color: #FFCC99; }
+•	De atributo: [atributo] selecciona los elementos que tienen ese atributo. Ejemplo: a[href] { text-decoration: underline; }
+•	Descendiente: A B selecciona los B que están dentro de un A, a cualquier nivel. Ejemplo: div p { color: blue; }
+•	Hijo: A > B selecciona los B que son hijos directos de A. Ejemplo: ul > li { list-style: square; }
+•	Adyacente: A + B selecciona el B que va inmediatamente después de A. Ejemplo: h1 + p { font-weight: bold; }
+•	Agrupación: A, B aplica la misma regla a varios selectores. Ejemplo: h1, h2, h3 { margin: 0; }
+5. ¿Qué es una pseudo-clase? ¿Cuáles se usan con vínculos? Una pseudo-clase selecciona un elemento según su estado o posición, sin que exista un atributo en el HTML. Se escribe con dos puntos (:). Las más usadas con vínculos son:
+•	:link: enlace no visitado.
+•	:visited: enlace ya visitado.
+•	:hover: el puntero está sobre el enlace.
+•	:active: el enlace se está presionando.
+El orden importa: :link, :visited, :hover, :active (se recuerda como LVHA). Si se invierte, algunas reglas no se aplican cuando deberían.
+6. ¿Qué es la herencia? Es el mecanismo por el cual un elemento hereda ciertas propiedades de su elemento padre o ancestro. Por ejemplo, si body tiene color: green, todo el texto dentro de la página hereda ese color, salvo que otra regla lo cambie. Propiedades como color, font-family, font-size y font-weight se heredan. Otras, como margin, padding, border y background-color, no se heredan.
+7. ¿En qué consiste el proceso de cascada? Cuando varias reglas aplican al mismo elemento y a la misma propiedad, el navegador decide cuál gana siguiendo tres criterios, en este orden:
+1.	Origen e importancia: las declaraciones con !important ganan sobre las normales; los estilos del autor ganan sobre los del navegador.
+2.	Especificidad: los selectores más específicos ganan. Un id (#x) es más específico que una clase (.x), y una clase es más específica que un elemento (p). El universal * no suma especificidad.
+3.	Orden de aparición: si la especificidad es igual, gana la última regla declarada.
+Ejercicio 2
+Analizar el siguiente código señalando declaraciones y aplicaciones de reglas, y su efecto.
+p#normal {
+font-family: arial,helvetica;
+font-size: 11px;
+font-weight: bold;
+}
+*#destacado {
+border-style: solid;
+border-color: blue;
+border-width: 2px;
+}
+#distinto {
+background-color: #9EC7EB;
+color: red;
+}
+<p id="normal">Este es un párrafo</p>
+<p id="destacado">Este es otro párrafo</p>
+<table id="destacado"><tr><td>Esta es una tabla</td></tr></table>
+<p id="distinto">Este es el último párrafo</p>
+
+•	p#normal aplica solo al párrafo con id="normal". Su texto se ve en Arial (o Helvetica), 11px y en negrita.
+•	*#destacado aplica un borde sólido azul de 2px a cualquier elemento con id="destacado". El * no cambia nada, porque el id ya selecciona el elemento. Con eso, el segundo párrafo y la tabla tienen borde.
+•	#distinto aplica fondo celeste (#9EC7EB) y texto rojo al último párrafo.
+
+Ejercicio 3
+p.quitar {
+color: red;
+}
+*.desarrollo {
+font-size: 8px;
+}
+.importante {
+font-size: 20px;
+}
+<p class="desarrollo"> 
+En este primer párrafo trataremos lo siguiente:
+<br />xxxxxxxxxxxxxxxxxxxxxxxxx
+</p>
+<p class="quitar">
+Este párrafo debe ser quitado de la obra…
+<br />xxxxxxxxxxxxxxxxxxxxxxxxx
+</p>
+<p >
+En este otro párrafo trataremos otro tema:<br />
+xxxxxxxxxxxxxxxxxxxxxxxxx
+</p>
+<p class="importante">
+Y este es el párrafo más importante de la obra…
+<br />xxxxxxxxxxxxxxxxxxxxxxxxx
+</ p>
+<h1 class="quitar">Este encabezado también debe ser quitado de la obra</h1>
+<p class="quitar importante">Se pueden aplicar varias clases a la vez</p>
+Efectos sobre cada elemento:
+•	<p class="desarrollo">: el texto se ve en 8px (regla *.desarrollo).
+•	<p class="quitar">: el texto se ve en rojo (regla p.quitar). El nombre de la clase no quita el párrafo; solo cambia el color.
+•	<p> sin clase: texto por defecto (negro, tamaño normal).
+•	<p class="importante">: texto en 20px.
+•	<h1 class="quitar">: título en rojo. El tamaño es el del h1 por defecto.
+•	<p class="quitar importante">: aplica las dos reglas a la vez, porque no hay conflicto. El texto es rojo y de 20px. Un elemento puede tener varias clases separadas por espacios, y cada una aporta sus declaraciones.
+Ejercicio 4
+Dadas las siguientes declaraciones:
+* {color:green; }
+a:link {color:gray }
+a:visited{color:blue }
+a:hover {color:fuchsia }
+a:active {color:red }
+p {font-family: arial,helvetica;font-size: 10px;color:black; }
+.contenido{font-size: 14px;font-weight: bold; }
+
+Analizar los siguientes códigos y comparar sus efectos. Explicar:
+<body>
+<p class="contenido" style="font-weight: normal;">
+Este es un texto ...............</p>
+<table>
+<tr>
+<td>Y esta es una tabla.......</td>
+</tr>
+<tr>
+<td><a href="http://www.google.com.ar">con un
+enlace</a></td>
+</tr>
+</table>
+</body>
+
+<body class="contenido">
+<p> Este es un texto................</p>
+<table>
+<tr>
+<td>Y esta es una tabla.......</td>
+</tr>
+<tr>
+<td><a href="http://www.google.com.ar">con 
+un enlace</a></td>
+</tr>
+</table>
+</body>
+Código izquierdo (body sin clase, p con clase y estilo en línea):
+•	<p class="contenido" style="font-weight: normal;">: el texto tiene 14px, porque la clase .contenido (especificidad de clase) le gana a la regla p (especificidad de elemento). Tiene peso normal porque el style en línea gana sobre la clase. Color negro por la regla p.
+•	La tabla no tiene clase. Su texto hereda el tamaño por defecto (16px) y el peso normal. Su color es verde por *.
+•	El enlace: a:link le da color gris (especificidad mayor que *).
+Código derecho (body class="contenido"):
+•	La clase va en body, así que font-size: 14px y font-weight: bold se heredan por todo el documento.
+•	El párrafo tiene su propia regla p, que fija el tamaño en 10px. Esa regla gana a la herencia, así que el párrafo queda en 10px. Sí hereda la negrita, así que el texto del párrafo es negrita de 10px, negro.
+•	La tabla hereda 14px y negrita desde body. Su color es verde por *.
+•	El enlace es gris y, al pasar el mouse, fucsia.
+Comparación: en el código izquierdo el texto de la tabla queda normal y de 16px. En el derecho, la tabla queda en negrita de 14px, porque hereda del body. El párrafo se mantiene en 10px en ambos casos, porque la regla p tiene prioridad sobre la herencia. El style en línea del párrafo izquierdo es lo que lo deja en peso normal.
+Ejercicio 5
+1.	Textos enfatizados dentro de títulos en rojo: h1 em, h2 em, h3 em, h4 em, h5 em, h6 em { color: red; }
+2.	Elemento con href dentro de un párrafo que está dentro de un bloque (div), en negro: div p [href] { color: black; }
+3.	Texto de listas no ordenadas dentro de #ultimo en amarillo, y los enlaces en azul: #ultimo ul li { color: yellow; } y #ultimo ul a { color: blue; }. Nota: el amarillo sobre fondo blanco tiene poco contraste.
+4.	.importante en verde dentro de bloques, y en rojo si está dentro de un título. La regla de título va después y tiene la misma especificidad, así que gana.
+5.	h1[title] { color: blue; }
+6.	Enlaces en listas ordenadas: azul si no fueron visitados, violeta si fueron visitados, sin subrayado. Usé purple como violeta, porque es más visible que violet.
+
+
+
+
+Ejercicio 6
+El archivo principal.html reemplaza el <style> interno por <link rel="stylesheet" href="estilo2.css">. El archivo estilo2.css es idéntico al original, sin modificaciones. Para que la salida sea la misma, el HTML tuvo que ajustarse a los selectores de estilo2.css:
+•	id="titulo" pasó a id="encabezado", porque el CSS externo usa #encabezado.
+•	La lista recibió class="vineta", porque el CSS externo usa ul.vineta.
+•	El menú dejó la clase navBar y quedó solo con id="menu". Sus márgenes, relleno y tamaño de fuente ya están en #menu del CSS externo.
+•	El pie recibió class="estilopie", que aporta el borde y el color del texto.
+•	El efecto a:hover con fondo gris está en a:hover del CSS externo. Como todos los enlaces están en el menú, el resultado es igual.
+
+Ejercicio 7: Pude terminar de resolver los 32 niveles del juego.
+ 
