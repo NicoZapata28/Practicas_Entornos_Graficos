@@ -1,0 +1,227 @@
+Ejercicios
+Ejercitación 1 - Responder el siguiente cuestionario
+1. Qué es HTML, cuando fue creado, cuáles fueron las distintas versiones y cuál es la última?
+HTML (HyperText Markup Language) es el lenguaje de marcado que estructura el contenido de las páginas web. Lo creó Tim Berners-Lee en 1991 en el CERN. Las versiones principales fueron: HTML 2.0 (1995), HTML 3.2 (1997), HTML 4.0 (1997), HTML 4.01 (1999), XHTML 1.0 (2000) y XHTML 1.1 (2001). HTML5 fue publicado como recomendación del W3C en 2014 y hoy se mantiene como un "estándar vivo" (HTML Living Standard) desarrollado por WHATWG. La última versión es, por lo tanto, HTML5 (y su estándar vivo).
+2. ¿Cuáles son los principios básicos que el W3C recomienda seguir para la creación de documentos con HTML?
+La especificación HTML 4.01 propone, entre otros, estos principios:
+•	Separación de estructura y presentación: el HTML describe el contenido y su estructura; el aspecto visual se define con CSS.
+•	Independencia del dispositivo: el documento debe poder usarse desde distintos navegadores, pantallas y dispositivos (computadoras, celulares, lectores de voz).
+•	Accesibilidad universal: el contenido debe ser utilizable por personas con discapacidades (por ejemplo, usando alt en las imágenes o scope en las tablas).
+•	Internacionalización: el documento debe poder representar distintos idiomas y juegos de caracteres.
+•	Interoperabilidad y compatibilidad hacia atrás: los documentos deben funcionar entre sistemas, y las versiones nuevas deben seguir leyendo los documentos viejos.
+3. En las Especificaciones de HTML, ¿cuándo un elemento o atributo se considera desaprobado? ¿y obsoleto?
+•	Desaprobado (deprecated): el elemento o atributo todavía está en la especificación y los navegadores lo soportan, pero el W3C desaconseja usarlo porque existe una alternativa mejor (por ejemplo, <font>, align o bgcolor, que se reemplazan con CSS).
+•	Obsoleto (obsolete): ya no forma parte de la especificación actual y no debe usarse; los navegadores pueden ignorarlo o soportarlo solo por compatibilidad (por ejemplo, <marquee> o <blink>, que nunca fueron estándar).
+4. Qué es el DTD y cuáles son los posibles DTDs contemplados en la especificación de HTML 4.01?
+El DTD (Document Type Definition, definición de tipo de documento) es un conjunto de reglas que indica qué elementos y atributos son válidos en un documento y en qué orden pueden aparecer. HTML 4.01 define tres:
+
+
+•	Strict (estricto): sin elementos ni atributos de presentación desaprobados.
+•	Transitional (transicional o de transición): permite los desaprobados, para compatibilidad con documentos viejos.
+•	Frameset (con marcos): agrega el elemento <frameset> para dividir la ventana en marcos.
+5. Qué son los metadatos y cómo se especifican en HTML?
+Los metadatos son información sobre el documento (autor, descripción, palabras clave, codificación, fecha de vencimiento) que no se muestra en la página. Se especifican con el elemento <meta> dentro de <head>, de dos maneras:
+•	Con name y content: <meta name="description" content="Sitio de la cátedra">
+•	Con http-equiv y content: equivale a una cabecera HTTP, por ejemplo <meta http-equiv="Content-Type" content="text/html; charset=utf-8">.
+
+Ejercitación 2 - Análisis de fragmentos
+2.a) 
+<!-- Código controlado el día 12/08/2009 →
+•	Sección: puede ir en <head> o <body>.
+•	Efecto: ninguno visible. Los comentarios los ignora el navegador.
+•	Elementos: un comentario <!-- ... -->. No tiene atributos.
+•	Obligatorio: no aplica.
+•	Error: falta el cierre -->. Todo lo que siga, incluyendo el contenido de la página, queda dentro del comentario y no se muestra hasta encontrar un -->.
+2.b) 
+<div id="bloque1">Contenido del bloque1</div>
+•	Sección: <body>.
+•	Efecto: crea un bloque genérico (un contenedor sin significado semántico) con el texto "Contenido del bloque1". Sin CSS se ve como un párrafo, con salto de línea antes y después.
+•	Etiquetas: <div> de apertura y </div> de cierre.
+•	Atributos: id="bloque1", nombre id, valor bloque1. Identifica el elemento de forma única en la página. Es opcional.
+2.c) 
+<img src="" alt="lugar imagen" id="im1" name="im1" width="32" height="32" longdesc="detalles.htm" />
+•	Sección: <body>, dentro de un bloque.
+•	Efecto: muestra una imagen de 32×32 píxeles. Como src está vacío, la imagen no se carga y se ve el texto alternativo ("lugar imagen").
+•	Etiquetas: <img> es un elemento vacío (no tiene cierre; se usa />).
+•	Atributos: 
+o	src (obligatorio): dirección de la imagen. Aquí está vacío, un error.
+o	alt (obligatorio en la práctica): texto alternativo para accesibilidad.
+o	id y name: identificadores. name quedó desaprobado en <img>.
+o	width y height: dimensiones en píxeles (opcionales).
+o	longdesc: enlace a una descripción extensa de la imagen. Quedó obsoleto en HTML5.
+2.d) 
+<meta name="keywords" lang="es" content="casa, compra, venta, alquiler " /> <meta http-equiv="expires" content="16-Sep-2019 7:49 PM" />
+•	Sección: <head>.
+•	Efecto: no se ve en la página. La primera define palabras clave para buscadores (hoy casi ningún buscador las usa). La segunda indica que el contenido vence el 16/9/2019 a las 19:49; ese día ya pasó, y los navegadores y cachés la tratan de forma inconsistente. El formato de fecha tampoco es el recomendado (RFC 1123).
+•	Etiquetas: <meta>, elemento vacío.
+•	Atributos: name / http-equiv (qué tipo de metadato es), content (el valor), lang (idioma del valor; válido en <meta>).
+•	Obligatorio: content es obligatorio. Tiene que haber name, http-equiv o charset.
+2.e) 
+<a href="http://www.e-style.com.ar/resumen.html" type="text/html" hreflang="es" charset="utf-8" rel="help">Resumen HTML </a>
+•	Sección: <body>, dentro de un párrafo o bloque.
+•	Efecto: muestra el texto "Resumen HTML" como enlace. Al hacer clic, navega a resumen.html en el mismo sitio o pestaña.
+•	Etiquetas: <a> de apertura y </a> de cierre.
+•	Atributos: 
+o	href (obligatorio para que sea un enlace navegable): URL de destino.
+o	type="text/html": tipo MIME del destino. Es informativo.
+o	hreflang="es": idioma del destino. Es informativo.
+o	charset="utf-8": codificación esperada del destino. Quedó obsoleto en HTML5.
+o	rel="help": relación entre el documento actual y el destino (el destino es una ayuda).
+2.f)
+<table width="200" summary="Datos correspondientes al ejercicio vencido">
+<caption align="top"> Título </caption>
+<tr> <th scope="col">&nbsp;</th> <th scope="col">A</th> <th scope="col">B</th> <th scope="col">C</th> </tr>
+<tr> <th scope="row">1º</th> <td>&nbsp;</td> <td>&nbsp;</td> <td>&nbsp;</td> </tr>
+<tr> <th scope="row">2º</th> <td>&nbsp;</td> <td>&nbsp;</td> <td>&nbsp;</td> </tr>
+</table>
+•	Sección: <body>.
+•	Efecto: una tabla de 4 columnas por 3 filas (la primera columna y la primera fila son encabezados). Tiene un título arriba, "Título", y la primera celda de encabezado queda vacía (esquina). Las celdas con &nbsp; quedan como espacios vacíos.
+•	Etiquetas: <table>, <caption>, <tr>, <th> (encabezado) y <td> (dato). El <caption> debe ser el primer hijo de <table>.
+•	Atributos: 
+o	width="200": ancho en píxeles. Hoy se recomienda CSS.
+o	summary: descripción de la tabla para lectores de pantalla. Quedó obsoleta en HTML5.
+o	align="top" en <caption>: posición del título. Desaprobado.
+o	scope="col" / scope="row": indica si el encabezado se aplica a una columna o a una fila. Mejora la accesibilidad.
+
+Ejercitación 3 - Diferencias entre segmentos
+3.a) 
+1.	<a href="http://www.google.com.ar">Click aquí para ir a Google</a>: enlace normal, abre en la misma pestaña.
+2.	Igual que el anterior con target="_blank": abre en una pestaña o ventana nueva.
+3.	href="http://www. google.com.ar": la URL tiene un espacio después del punto, así que no es válida y el enlace falla. Además no tiene texto ni cierre </a>, así que no se ve nada clicable.
+4.	href="#": enlace vacío. Lleva al principio de la misma página, aunque el texto diga "Click aquí para ir a Google". Es engañoso.
+5.	href="#arriba": enlace interno. Lleva al elemento cuyo id es arriba.
+6.	<a name="arriba" id="arriba"></a>: ancla de destino. No tiene contenido, así que no se ve. Sirve de destino para el enlace 5. name quedó desaprobado en HTML5; alcanza con id.
+3.b) 
+1.	<p><img/><a>Click aquí</a></p>: la imagen se muestra, pero no es un enlace. Solo el texto "Click aquí" es clicable.
+2.	<p><a><img/></a> Click aquí</p>: la imagen es el enlace. El texto "Click aquí" no es un enlace.
+3.	<p><a><img alt="ima gen1" />Click aquí</a></p>: la imagen y el texto forman un único enlace. Se puede hacer clic en cualquiera de los dos. El alt quedó partido en dos líneas en el código; el navegador lo toma como espacio.
+4.	<p><a><img/></a> <a>Click aquí</a></p>: dos enlaces separados, uno en la imagen y otro en el texto, ambos a la misma URL.
+3.c) 
+1.	<ul>: lista no ordenada, con viñetas.
+2.	<ol>: lista ordenada, numerada 1, 2, 3.
+3.	Tres <ol> separados: el primero muestra "1. xxx". El segundo tiene <li value="2"> y muestra "2. yyy". El tercero tiene <li value="3"> y muestra "3. zzz". El atributo value fuerza el número del ítem, y cada lista se numera por separado.
+4.	<blockquote> con <p> y saltos <br />: los números "1.", "2.", "3." son texto escrito a mano, no una lista. Se ve sangrado, como cita, y no se puede reordenar con facilidad.
+3.d) 
+•	Izquierda: los encabezados usan <th>, que el navegador muestra en negrita y centrados por defecto. Es semánticamente correcto porque el navegador y los lectores de pantalla saben que son encabezados.
+•	Derecha: los encabezados son <td> con <div align="center"><strong>. Se ven parecidos, pero el significado se pierde: para el navegador son datos comunes. Además el texto "Colum\nna1" tiene un salto de línea en el código; se renderiza como "Colum na1", con un espacio en el medio.
+3.e) 
+•	Izquierda: el título va en <caption>, fuera de las filas. Es la forma semántica de dar nombre a una tabla.
+•	Derecha: el título es una primera fila con <td colspan="3">, dentro del cuerpo de la tabla. Se ve parecido, pero el título es un dato más para el navegador.
+3.f) 
+•	Izquierda: la primera fila ocupa las 3 columnas (colspan="3"). En la segunda fila, la primera celda ocupa 2 filas (rowspan="2"), así que la tercera fila tiene solo 2 celdas.
+•	Derecha: la segunda fila tiene una celda que ocupa 2 columnas (colspan="2"), y la tercera fila tiene 3 celdas normales. Así, la combinación está arriba a la izquierda y no en la columna izquierda.
+3.g) 
+•	Izquierda: tiene 3 columnas. La fila 2 tiene una celda de 2 columnas y 2 filas. La fila 3 tiene una celda de 50% de ancho, ubicada en la columna 3.
+•	Derecha: tiene 2 columnas, con cellpadding="0" y cellspacing="0". Eso quita el espacio interno de las celdas y el espacio entre ellas, así que los bordes quedan pegados. La celda de la izquierda ocupa 2 filas.
+•	Observación: en la izquierda falta un espacio entre colspan="2" y rowspan="2". Los navegadores lo toleran, pero es un error de sintaxis.
+3.h) 
+1.	form1: method="post" envía los datos en el cuerpo de la petición, sin verlos en la URL. Va a procesar.php y abre en una nueva ventana (target="_blank"). fieldset y legend agrupan el formulario y le ponen título. El campo de clave trae el valor "xxx" precargado, lo que es una mala práctica de seguridad.
+2.	form2: method="get" y action="" (envía a la misma página). Los datos quedan visibles en la URL, como ?usu2=...&clave2=.... La clave es type="text", así que se ve en pantalla; debería ser type="password". No tiene fieldset. Las etiquetas label envuelven cada campo, lo que permite hacer clic en el texto para enfocar el campo.
+3.	form3: action="mailto:xx@xx.com”" envía el formulario por correo con el cliente de mail del usuario. Tiene un error: el cierre del valor es una comilla tipográfica (”) en vez de una comilla recta ("), así que el atributo queda mal formado. Además, el botón es type="reset": no envía nada, solo borra los campos, aunque su texto diga "Enviar".
+3.i) 
+1.	<button type="button"> dentro de un <label>: el botón puede contener elementos (una imagen y texto en negrita). type="button" hace que no envíe el formulario; solo ejecutaría un script si lo tuviera.
+2.	<input type="button" value="CLICK AQUÍ" />: el input es un elemento vacío y solo puede mostrar un texto (value). No admite contenido enriquecido.
+3.j) 
+•	Primer bloque: los dos botones tienen name="opcion". Eso forma un grupo y solo se puede elegir uno.
+•	Segundo bloque: tienen name="opcion1" y name="opcion2". Son grupos distintos, así que se pueden marcar ambos a la vez, que no es lo que se busca al tener opciones excluyentes.
+•	Error: los id "X" e "Y" se repiten en los dos bloques. Un id debe ser único en la página. label funciona igual aunque los id estén repetidos, porque el label envuelve al input.
+3.k) 
+•	Izquierda: <select name="lista"> es una lista desplegable: se puede elegir un solo valor. Las optgroup agrupan opciones con un título ("Caso 1", "Caso 2").
+•	Derecha: multiple="multiple" permite seleccionar varios valores a la vez, y se muestra como una caja con desplazamiento. El nombre lista[] hace que el servidor (PHP) reciba un arreglo con todas las selecciones. Hay un espacio al inicio de la etiqueta " Caso 1".
+
+Ejercitación 4 - Página de la salida visual
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Examen 2008 - UTN FRRO</title>
+<style>
+  body { font-family: Arial, Helvetica, sans-serif; margin: 20px; }
+  table { border-collapse: collapse; }
+  td, th { border: 1px solid #999; padding: 4px 10px; }
+</style>
+</head>
+<body>
+
+<a href="http://www.frro.utn.edu.ar/" target="_blank">
+  <img src="logo_utn.jpg" alt="UTN-FRRO" width="60" height="60">
+</a>
+<hr>
+
+<h1>AÑO 2008</h1>
+
+<table>
+  <tr><th colspan="2">Exámenes</th></tr>
+  <tr>
+    <td rowspan="2">Fecha: <span>15/10/2026</span></td>
+    <th>Aprobados</th>
+  </tr>
+  <tr><td>24/30</td></tr>
+</table>
+
+<ol>
+  <li><a href="#enunciado">Enunciado del examen</a></li>
+  <li><a href="resolucion.html" target="_blank">Resolución</a></li>
+</ol>
+
+<p>Puede realizar consultas completando el siguiente formulario:</p>
+
+<form action="mailto:x@x.com" method="post" enctype="text/plain">
+  <table>
+    <tr>
+      <td><label for="email">e-mail:</label></td>
+      <td><input type="email" id="email" name="email" size="30"></td>
+    </tr>
+    <tr>
+      <td><label for="consulta">consulta:</label></td>
+      <td><textarea id="consulta" name="consulta" rows="5" cols="30"></textarea></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+        <input type="submit" value="ENVIAR">
+        <input type="reset" value="BORRAR">
+      </td>
+    </tr>
+  </table>
+</form>
+
+<h2 id="enunciado">Enunciado del examen</h2>
+<div>
+  <p>Ejercicio 1: ..............................................<br>
+     ..............................................................</p>
+  <p>Ejercicio 2: ..............................................<br>
+     ..............................................................</p>
+</div>
+
+
+<p>Para más información dirigirse a <a href="mailto:contacto@xx.com">contacto@xx.com</a></p>
+
+</body>
+</html>
+
+Ejercitación 5 - Documento con marcos
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Documento con marcos</title>
+</head>
+<frameset rows="20%,60%,20%">
+  <frameset cols="80%,20%">
+    <frame src="encabezado.htm" name="encabezado" noresize="noresize">
+    <frame src="logo.htm" name="logo" noresize="noresize">
+  </frameset>
+  <frameset cols="25%,75%">
+    <frame src="menu.htm" name="menu">
+    <frame src="Articulos.htm" name="principal">
+  </frameset>
+  <frame src="pie.htm" name="pie" noresize="noresize">
+  <noframes>
+    <body>
+      <p>Este sitio requiere un navegador con soporte para marcos.</p>
+    </body>
+  </noframes>
+</frameset>
+</html>
+
